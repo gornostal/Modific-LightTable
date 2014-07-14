@@ -1,0 +1,2 @@
+{:+ {:app [(:lt.objs.plugins/load-js "modific_compiled.js")]
+     :modific.hello [:lt.plugins.modific/on-close-destroy]}}
