@@ -1,0 +1,9 @@
+.modific-mod {
+  background: rgba(255, 255, 0, 0.6);
+}
+.modific-add {
+  background: rgba(0, 255, 50, 0.6);
+}
+.modific-rem {
+  background: rgba(255, 50, 50, 0.6);
+}

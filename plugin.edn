@@ -1,6 +1,6 @@
 {:name "modific"
  :version "0.0.1"
- :author ""
+ :author "Aleksandr Gornostal"
  :source ""
  :desc ""
  :behaviors "modific.behaviors"}

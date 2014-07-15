@@ -1,29 +1,22 @@
 (ns lt.plugins.modific
   (:require [lt.object :as object]
-            [lt.objs.tabs :as tabs]
-            [lt.objs.command :as cmd])
+            [lt.util.dom :as dom]
+            [lt.objs.editor :as editor]
+            [lt.objs.command :as cmd]
+            [lt.plugins.modific.gutter :as gutter])
   (:require-macros [lt.macros :refer [defui behavior]]))
 
-(defui hello-panel [this]
-  [:h1 "Hello from modific"])
 
-(object/object* ::modific.hello
-                :tags [:modific.hello]
-                :name "modific"
-                :init (fn [this]
-                        (hello-panel this)))
+(object/create
+ (object/object* ::modific
+                 :tags #{:modific}
+                 :init (fn [this]
+                         (object/raise this :init.settings!))))
 
-(behavior ::on-close-destroy
-          :triggers #{:close}
-          :reaction (fn [this]
-                      (when-let [ts (:lt.objs.tabs/tabset @this)]
-                        (when (= (count (:objs @ts)) 1)
-                          (tabs/rem-tabset ts)))
-                      (object/raise this :destroy)))
 
-(def hello (object/create ::modific.hello))
-
-(cmd/command {:command ::say-hello
-              :desc "modific: Say Hello"
-              :exec (fn []
-                      (tabs/add-or-focus! hello))})
+;; Roadmap
+(defn- show-diff [])
+(defn- revert-changes [])
+(defn- jump-between-changes [])
+(defn- show-original [])
+(defn- uncommitted-files [])
