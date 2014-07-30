@@ -6,9 +6,9 @@
                        :diff.options ["--no-color" "--no-ext-diff"]}
                  :max.file.length 1000 ; lines
                  :gutter-width 2})]
-     :editor [:lt.plugins.modific.gutter/refresh-on-save
+     :editor [:lt.plugins.modific.gutter/add-markers
               :lt.plugins.modific.diff/exec-cmd-out
               :lt.plugins.modific.diff/exec-cmd-error
               :lt.plugins.modific.gutter/on-diff-parsed
               :lt.plugins.modific.vcs/refresh-on-save-as
-              :lt.objs.proc/print-all]}}
+              #_:lt.objs.proc/print-all]}}

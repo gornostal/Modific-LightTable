@@ -24,7 +24,7 @@
                  (conj hunks buffer)
                  hunks)
                (if hunk-start
-                 [(int hunk-start)]
+                 [(int hunk-start) (first lines)]
                  (conj buffer (first lines)))
                (last (re-find re-header (first lines)))
                (rest lines))))))
@@ -48,7 +48,7 @@
     (->>
      (map (fn [[i & lines]]
             (loop [prev-k nil                 ; previous modification key #{:+ :- :* nil}
-                   i (inc i)                  ; current line #
+                   i i                        ; current line #
                    chunks []                  ; chunks to return
                    buffer []                  ; chunk buffer
                    mod-start nil              ; modifications start at line #

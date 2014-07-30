@@ -71,20 +71,12 @@
           :reaction (fn [this]
                       (add-gutter (pool/last-active))))
 
-
-(behavior ::refresh-on-save
-          :triggers #{:save+}
-          :desc "Modific: Refresh gutter on save"
-          :reaction (fn [ed content]
-                      (try
-                        (when (<
-                               (editor/line-count ed)
-                               (or (util/settings :max.file.length) 1000))
-                          (diff/run ed))
-                        (catch :default e
-                          (object/safe-report-error (str "Modific - Error: " e))
-                          (object/safe-report-error e)))
-                      content))
+(behavior ::add-markers
+          :triggers #{:save+ :init :focus}
+          :desc "Modific: Refresh gutter"
+          :reaction (fn
+                      ([ed] (add-markers ed))
+                      ([ed content] (add-markers ed) content)))
 
 
 (behavior ::on-diff-parsed
@@ -110,6 +102,17 @@
                         {:gutters (clj->js (conj current-gutters "modific-gutter"))})
     (dom/set-css (dom/$ :div.modific-gutter gutter-div)
                  {"width" (str width "px")})))
+
+
+(defn add-markers [ed]
+  (try
+    (when (<
+           (editor/line-count ed)
+           (or (util/settings :max.file.length) 1000))
+      (diff/run ed))
+    (catch :default e
+      (object/safe-report-error (str "Modific - Error: " e))
+      (object/safe-report-error e))))
 
 
 (defn remove-markers [this]
