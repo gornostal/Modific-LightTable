@@ -1,5 +1,6 @@
 {:+ {:app [(:lt.objs.plugins/load-js "modific_compiled.js")
-           (:lt.objs.plugins/load-css "modific.css")]
+           (:lt.objs.plugins/load-css "modific.css")
+           (:lt.objs.plugins/load-keymap "modific.keymap")]
      :modific [(:lt.plugins.modific.util/settings
                 {:git {:dir ".git"
                        :bin "git"

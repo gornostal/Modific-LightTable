@@ -45,7 +45,7 @@
     (let [ed (editor/->cm-ed this)
           i 0
           line-height (.defaultTextHeight ed)
-          width (util/settings :gutter-width)
+          width (or (util/settings :gutter-width) 2)
           markers (->gutter-markers diff width line-height)]
       (editor/operation
        this

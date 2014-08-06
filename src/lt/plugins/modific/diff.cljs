@@ -13,7 +13,8 @@
 (defn- diff->hunks [diff]
   (let [re-header #"^@@[0-9\-, ]+\+(\d+)"
         lines (->> (clojure.string/split-lines diff)
-                   (drop-while (complement #(re-find re-header %))))]
+                   (drop-while (complement #(re-find re-header %)))
+                   (filter (complement #(= \\ (first %)))))]
     (loop [hunks []
            buffer []
            hunk-start (last (re-find re-header (first lines)))
@@ -82,7 +83,7 @@
 
 
 ;;*********************************************************
-;; Behaviorss
+;; Behaviors
 ;;*********************************************************
 
 

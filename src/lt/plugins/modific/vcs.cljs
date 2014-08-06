@@ -33,7 +33,7 @@
 
   ([editor cache-empty?]
    (if-let [vcs-obj (find-vcs editor)]
-     (do
+     (when (:root vcs-obj)
        (object/merge! editor {:vcs-obj vcs-obj})
        vcs-obj)
      (vcs-not-found editor))))

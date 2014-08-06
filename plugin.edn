@@ -3,4 +3,5 @@
  :author "Aleksandr Gornostal"
  :source ""
  :desc ""
+ :keymap "modific.keymap"
  :behaviors "modific.behaviors"}
