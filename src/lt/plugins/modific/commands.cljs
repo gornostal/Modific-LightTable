@@ -3,7 +3,8 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.command :as cmd]
             [lt.plugins.modific.diff :as diff]
-            [lt.plugins.modific.util :as util]))
+            [lt.plugins.modific.util :as util])
+  (:require-macros [lt.macros :refer [defui]]))
 
 (defn- get-line [current diff dir]
   (let [next? (= dir :next)]
@@ -22,6 +23,28 @@
       (editor/move-cursor ed {:ch 0 :line (dec (get-line line diff dir))}))))
 
 
+
+(defn- get-original []
+  (let [ed (pool/last-active)
+        diff (:diff @ed)
+        line (inc (:line (editor/->cursor ed)))]
+    (some (fn [{lines :lines removed :removed}]
+            (when (some #{line} lines) removed)) diff)))
+
+(defui original-ui [text]
+  [:div.inline-doc [:pre text]])
+
+(get-original)
+
+(defn- show-original []
+  (editor/line-widget
+   (pool/last-active)
+   38
+   (original-ui "hello\nworld")))
+
+(show-original)
+
+
 ;;*********************************************************
 ;; Commands
 ;;*********************************************************
@@ -38,3 +61,9 @@
               :exec (fn []
                       (go-to-change :prev))})
 
+
+(cmd/command {:command ::show-original
+              :desc "Modific: show original"
+              :hidden true
+              :exec (fn []
+                      (go-to-change :prev))})
