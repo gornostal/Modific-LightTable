@@ -15,8 +15,9 @@
 
 
 ;; Roadmap
-(defn- show-diff [])
-(defn- revert-changes [])
-(defn- jump-between-changes [])
-(defn- show-original [])
-(defn- uncommitted-files [])
+;; -------
+;; show-diff
+;; revert-changes
+;; jump-between-changes
+;; show-original
+;; uncommitted-files
