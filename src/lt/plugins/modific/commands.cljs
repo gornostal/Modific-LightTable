@@ -17,9 +17,10 @@
 (defn- go-to-change [dir]
   (let [ed (pool/last-active)
         diff (:diff @ed)
-        line (editor/last-line ed)]
+        line (inc (:line (editor/->cursor ed)))]
     (when (and (> (count diff) 0) line)
-      (editor/move-cursor ed {:ch 0 :line (get-line line diff dir)}))))
+      (editor/move-cursor ed {:ch 0 :line (dec (get-line line diff dir))}))))
+
 
 ;;*********************************************************
 ;; Commands
