@@ -12,12 +12,3 @@
                  :tags #{:modific}
                  :init (fn [this]
                          (object/raise this :init.settings!))))
-
-
-;; Roadmap
-;; -------
-;; show-diff
-;; revert-changes
-;; jump-between-changes
-;; show-original
-;; uncommitted-files

@@ -2,6 +2,7 @@
   (:require [lt.objs.editor :as editor]
             [lt.objs.editor.pool :as pool]
             [lt.objs.command :as cmd]
+            [lt.plugins.doc :as doc]
             [lt.plugins.modific.diff :as diff]
             [lt.plugins.modific.util :as util])
   (:require-macros [lt.macros :refer [defui]]))
@@ -24,25 +25,23 @@
 
 
 
-(defn- get-original []
-  (let [ed (pool/last-active)
-        diff (:diff @ed)
-        line (inc (:line (editor/->cursor ed)))]
+(defn- get-original [ed line]
+  "Returns text that was in under cursor before changes"
+  (when-let [diff (:diff @ed)]
     (some (fn [{lines :lines removed :removed}]
             (when (some #{line} lines) removed)) diff)))
 
 (defui original-ui [text]
   [:div.inline-doc [:pre text]])
 
-(get-original)
-
 (defn- show-original []
-  (editor/line-widget
-   (pool/last-active)
-   38
-   (original-ui "hello\nworld")))
-
-(show-original)
+  (let [ed (pool/last-active)
+        line (:line (editor/->cursor ed))]
+    (if-let [cur (doc/doc-on-line? ed line)]
+      (doc/remove! ed cur)
+      (when-let [original (get-original ed (inc line))]
+        (doc/inline-doc ed (doc/doc-ui {:doc original}) {} {:line line})))
+    nil))
 
 
 ;;*********************************************************
@@ -66,4 +65,4 @@
               :desc "Modific: show original"
               :hidden true
               :exec (fn []
-                      (go-to-change :prev))})
+                      (show-original))})
