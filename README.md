@@ -2,6 +2,8 @@
 
 Modific is a Light Table plugin for highlighting lines changed since the last commit.
 
+Currently supports only *Git*.
+
 # Features
 
 ☑ Show gutter marks  
@@ -10,7 +12,7 @@ Modific is a Light Table plugin for highlighting lines changed since the last co
 
 # TODO
 
-☐ Show diff  
+☐ Show diff (on file save)  
 ☐ Revert changes  
 ☐ Show list of changed files  
 ☐ Add support for Subversion, Mercurial, Bazaar  
