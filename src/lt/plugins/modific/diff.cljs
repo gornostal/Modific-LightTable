@@ -2,6 +2,7 @@
   (:require [lt.objs.proc :as proc]
             [lt.plugins.modific.vcs :as vcs]
             [lt.object :as object]
+            [lt.util.js :as jsutil]
             [lt.objs.notifos :as notifos])
   (:require-macros [lt.macros :refer [behavior]]))
 
@@ -94,12 +95,25 @@
                         (println error)
                         (notifos/working error))))
 
+(behavior ::exec-cmd-exit
+          :triggers #{:proc.exit}
+          :reaction (fn [editor exit]
+                      (when (= exit 0)
+                        ;; :proc.exit comes before :proc.out, so we need this hack to check
+                        ;; if :proc.out returned diff
+                        ;; if now() - diff-time > 100 ms, that means diff is empty
+                        ;; TODO: find a better way to handle empty diff scenarios
+                        (jsutil/wait 0 #(if (>  (- (jsutil/now) (:diff-tme @editor)) 100)
+                                          (object/raise editor :diff nill)
+                                          (object/raise editor :diff (:diff @editor)))))))
+
 (behavior ::exec-cmd-out
           :triggers #{:proc.out}
           :reaction (fn [editor buffer]
-                      (object/raise editor :diff
-                                    (parse-diff (.toString buffer)
-                                                (-> @editor :info :line-ending)))))
+                      (object/merge! editor {:diff-tme (jsutil/now)
+                                             :diff (parse-diff
+                                                    (.toString buffer)
+                                                    (-> @editor :info :line-ending))})))
 
 
 ;;*********************************************************

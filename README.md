@@ -19,5 +19,4 @@ Currently supports only **Git**.
 
 # Known issues
 
-- Sometimes if changes were reverted, gutter marks don't get removed
 - Gutter marks don't refresh on behaviors change

@@ -80,7 +80,6 @@
           :triggers #{:diff}
           :desc "Modific: diff is parsed"
           :reaction (fn [editor diff]
-                      (object/merge! editor {:diff diff})
                       (render-markers editor diff)))
 
 
