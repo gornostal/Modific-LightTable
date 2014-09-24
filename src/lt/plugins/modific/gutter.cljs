@@ -50,15 +50,12 @@
       (editor/operation
        this
        (fn []
-         (add-gutter this)
          (remove-markers this)
          (doall (map (fn [[line el] marker] (.setGutterMarker ed (dec line) "modific-gutter" el))
                      markers))
          (object/raise this :refresh!)))
       nil)
-    (do
-      (add-gutter this)
-      (remove-markers this))))
+    (remove-markers this)))
 
 
 ;;*********************************************************
@@ -98,10 +95,12 @@
         ed (editor/->cm-ed this)
         width (util/settings :gutter-width)
         gutter-div (dom/$ :div.CodeMirror-gutters (object/->content this))]
-    (editor/set-options this
-                        {:gutters (clj->js (conj current-gutters "modific-gutter"))})
-    (dom/set-css (dom/$ :div.modific-gutter gutter-div)
-                 {"width" (str width "px")})))
+    (when-not (current-gutters "modific-gutter")
+      (do
+        (editor/set-options this
+                            {:gutters (clj->js (conj current-gutters "modific-gutter"))})
+        (dom/set-css (dom/$ :div.modific-gutter gutter-div)
+                     {"width" (str width "px")})))))
 
 
 (defn add-markers [ed]
@@ -109,6 +108,7 @@
     (when (<
            (editor/line-count ed)
            (or (util/settings :max.file.length) 1000))
+      (add-gutter ed)
       (diff/run ed))
     (catch :default e
       (object/safe-report-error (str "Modific - Error: " e))
