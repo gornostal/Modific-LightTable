@@ -8,15 +8,17 @@ Currently supports only **Git**.
 
 ☑ Show gutter marks (on file save)
 ☑ Jump between changes (`Ctrl+Shift+PageUp/PageDown`)
-☑ Show original part (`Ctrl+Alt+c`)
+☑ Show original part (Put cursor on a changed line and hit `Ctrl+Alt+c`)
+☑ Revert change (Put cursor on a changed line and hit `Ctrl+Alt+r`)
 
 # TODO
 
 ☐ Show diff
-☐ Revert changes
-☐ Show list of changed files
+☐ Show a list of changed files
 ☐ Add support for Subversion, Mercurial, Bazaar
+☐ Make gutter color and size configurable
 
 # Known issues
 
+- Revert doesn't work properly if first line is modified
 - Gutter marks don't refresh on behaviors change

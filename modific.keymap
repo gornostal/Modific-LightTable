@@ -1,4 +1,5 @@
 {:+ {:editor {"ctrl-shift-pagedown" [:lt.plugins.modific.commands/goto-next-change]
               "ctrl-shift-pageup" [:lt.plugins.modific.commands/goto-prev-change]
-              "ctrl-alt-c" [:lt.plugins.modific.commands/show-original]}}}
+              "ctrl-alt-c" [:lt.plugins.modific.commands/show-original]
+              "ctrl-alt-r" [:lt.plugins.modific.commands/revert-change]}}}
 

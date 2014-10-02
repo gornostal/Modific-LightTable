@@ -100,7 +100,7 @@
           :reaction (fn [editor exit]
                       (when (= exit 0)
                         ;; :proc.exit comes before :proc.out, so we need this hack to check
-                        ;; if :proc.out returned diff
+                        ;; if :proc.out returned something
                         ;; if now() - diff-time > 100 ms, that means diff is empty
                         ;; TODO: find a better way to handle empty diff scenarios
                         (jsutil/wait 0 #(if (>  (- (jsutil/now) (:diff-tme @editor)) 100)

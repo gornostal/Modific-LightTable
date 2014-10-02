@@ -3,7 +3,9 @@
             [lt.objs.editor.pool :as pool]
             [lt.objs.command :as cmd]
             [lt.plugins.doc :as doc]
+            [lt.objs.notifos :as notifos]
             [lt.plugins.modific.diff :as diff]
+            [lt.plugins.modific.gutter :as gutter]
             [lt.plugins.modific.util :as util])
   (:require-macros [lt.macros :refer [defui]]))
 
@@ -26,7 +28,7 @@
 
 
 (defn- get-original [ed line]
-  "Returns text that was in under cursor before changes"
+  "Returns text that was under the cursor before changes"
   (when-let [diff (:diff @ed)]
     (some (fn [{lines :lines removed :removed}]
             (when (some #{line} lines) removed)) diff)))
@@ -41,6 +43,42 @@
       (doc/remove! ed cur)
       (when-let [original (get-original ed (inc line))]
         (doc/inline-doc ed (doc/doc-ui {:doc original}) {} {:line line})))
+    nil))
+
+
+
+(defn- get-change [ed line]
+  "Returns change object that was under the cursor before changes"
+  "e.g., {:removed \"something\", :mod-type :*, :lines (47 48 49 50 51 52 53 54 55)}"
+  (when-let [diff (:diff @ed)]
+    (some (fn [{lines :lines :as change}]
+            (when (some #{line} lines) change)) diff)))
+
+(defn- revert-change []
+  (let [ed (pool/last-active)
+        line (:line (editor/->cursor ed))]
+    (if-let [change (get-change ed (inc line))]
+      (if (:dirty @ed)
+
+        ;; We need a user to save the file first,
+        ;; otherwise he will probably not get what he's expecting from the revert
+        (notifos/set-msg! (str "Modific: Save the file first!"))
+
+        (do (condp = (:mod-type change)
+              :* (editor/replace ed
+                                 {:line (-> (:lines change) first dec) :ch 0}
+                                 {:line (-> (:lines change) last dec)}
+                                 (:removed change))
+              :+ (editor/replace ed
+                                 {:line (-> (:lines change) first dec dec)}
+                                 {:line (-> (:lines change) last dec)}
+                                 "")
+              :- (editor/replace ed
+                                 {:line (-> (:lines change) first dec) :ch 0}
+                                 (str (:removed change) "\n")))
+          (gutter/remove-markers ed)))
+
+      (notifos/set-msg! (str "Modific: Nothing to revert")))
     nil))
 
 
@@ -60,9 +98,14 @@
               :exec (fn []
                       (go-to-change :prev))})
 
-
 (cmd/command {:command ::show-original
               :desc "Modific: show original"
               :hidden true
               :exec (fn []
                       (show-original))})
+
+(cmd/command {:command ::revert-change
+              :desc "Modific: revert change"
+              :hidden true
+              :exec (fn []
+                      (revert-change))})
