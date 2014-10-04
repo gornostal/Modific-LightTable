@@ -64,18 +64,14 @@
         ;; otherwise he will probably not get what he's expecting from the revert
         (notifos/set-msg! (str "Modific: Save the file first!"))
 
-        (do (condp = (:mod-type change)
-              :* (editor/replace ed
-                                 {:line (-> (:lines change) first dec) :ch 0}
-                                 {:line (-> (:lines change) last dec)}
-                                 (:removed change))
-              :+ (editor/replace ed
-                                 {:line (-> (:lines change) first dec dec)}
-                                 {:line (-> (:lines change) last dec)}
-                                 "")
-              :- (editor/replace ed
-                                 {:line (-> (:lines change) first dec) :ch 0}
-                                 (str (:removed change) "\n")))
+        (do (if (= :- (:mod-type change))
+              (editor/replace ed
+                              {:line (-> (:lines change) first dec) :ch 0}
+                              (str (:removed change) "\n"))
+              (editor/replace ed
+                              {:line (-> (:lines change) first dec) :ch 0}
+                              {:line (-> (:lines change) last) :ch 0}
+                              (str (:removed change) (when-not (= (:mod-type change) :+) "\n"))))
           (gutter/remove-markers ed)))
 
       (notifos/set-msg! (str "Modific: Nothing to revert")))
