@@ -1,6 +1,6 @@
 {
-  "name": "modific",
-  "version": "0.9.0",
+  "name": "Modific",
+  "version": "0.9.1",
   "author": "Aleksandr Gornostal",
   "source": "https://github.com/gornostal/Modific-LightTable",
   "desc": "Plugin that highlights lines changed since the last commit",

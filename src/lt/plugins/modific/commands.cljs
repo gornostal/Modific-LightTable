@@ -84,24 +84,16 @@
 
 (cmd/command {:command ::goto-next-change
               :desc "Modific: go to the next change"
-              :hidden true
-              :exec (fn []
-                      (go-to-change :next))})
+              :exec (partial go-to-change :next)})
 
 (cmd/command {:command ::goto-prev-change
               :desc "Modific: go to the previous change"
-              :hidden true
-              :exec (fn []
-                      (go-to-change :prev))})
+              :exec (partial go-to-change :prev)})
 
 (cmd/command {:command ::show-original
               :desc "Modific: show original"
-              :hidden true
-              :exec (fn []
-                      (show-original))})
+              :exec show-original})
 
 (cmd/command {:command ::revert-change
               :desc "Modific: revert change"
-              :hidden true
-              :exec (fn []
-                      (revert-change))})
+              :exec revert-change})
